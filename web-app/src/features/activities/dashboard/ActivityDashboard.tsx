@@ -12,6 +12,9 @@ interface IProps {
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   setSelectedActivity: (activity: IActivity | null) => void;
+  createActivity: (activity: IActivity) => void;
+  editActivity: (activity: IActivity) => void;
+  deleteActivity: (id: string) => void;
 }
 
 export function ActivityDashboard({
@@ -21,11 +24,18 @@ export function ActivityDashboard({
   editMode,
   setEditMode,
   setSelectedActivity,
+  createActivity,
+  editActivity,
+  deleteActivity
 }: IProps) {
   return (
     <Grid>
       <Grid.Column width={10}>
-        <ActivityList activities={activities} selectActivity={selectActivity} />
+        <ActivityList
+          activities={activities}
+          selectActivity={selectActivity}
+          deleteActivity={deleteActivity}
+        />
       </Grid.Column>
       <Grid.Column width={6}>
         {selectedActivity && !editMode && (
@@ -36,7 +46,13 @@ export function ActivityDashboard({
           />
         )}
         {editMode && (
-          <ActivityForm setEditMode={setEditMode} activity={selectedActivity} />
+          <ActivityForm
+            key={(selectedActivity && selectedActivity.id) || 0}
+            setEditMode={setEditMode}
+            activity={selectedActivity}
+            createActivity={createActivity}
+            editActivity={editActivity}
+          />
         )}
       </Grid.Column>
     </Grid>
