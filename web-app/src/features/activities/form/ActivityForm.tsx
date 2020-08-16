@@ -8,6 +8,7 @@ interface IProps {
   activity: IActivity | null;
   createActivity: (activity: IActivity) => void;
   editActivity: (activity: IActivity) => void;
+  submitting: boolean;
 }
 
 export function ActivityForm({
@@ -15,6 +16,7 @@ export function ActivityForm({
   activity: initialFormState,
   createActivity,
   editActivity,
+  submitting
 }: IProps) {
   function initializeForm() {
     if (initialFormState) {
@@ -94,7 +96,7 @@ export function ActivityForm({
           placeholder="Venue"
           value={activity.venue}
         />
-        <Button floated="right" positive type="submit" content="Submit" />
+        <Button floated="right" positive type="submit" content="Submit" loading={submitting} />
         <Button
           onClick={() => setEditMode(false)}
           floated="right"
