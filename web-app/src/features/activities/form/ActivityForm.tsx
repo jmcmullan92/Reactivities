@@ -9,23 +9,16 @@ import { RouteComponentProps } from "react-router-dom";
 interface DetailParams {
   id: string;
 }
-function ActivityForm({ match }: RouteComponentProps<DetailParams>) {
+function ActivityForm({ match, history }: RouteComponentProps<DetailParams>) {
   const activityStore = useContext(ActivityStore);
   const {
     createActivity,
     editActivity,
     submitting,
-    cancelFormOpen,
     activity: initialFormState,
     loadActivity,
+    clearActivity
   } = activityStore;
-
-  useEffect(() => {
-    if(match.params.id) {
-      loadActivity(match.params.id).then(()=> initialFormState && setActivity(initialFormState))
-    }
-  });
-
 
   const [activity, setActivity] = useState<IActivity>({
     id: "",
@@ -36,6 +29,16 @@ function ActivityForm({ match }: RouteComponentProps<DetailParams>) {
     city: "",
     venue: "",
   });
+
+  useEffect(() => {
+    if(match.params.id && activity.id.length === 0) {
+      loadActivity(match.params.id).then(()=> initialFormState && setActivity(initialFormState))
+    }
+
+    return function cleanup(){
+      clearActivity();
+    }
+  },[loadActivity, clearActivity, match.params.id, initialFormState, activity.id.length]);
 
   const handleInputChange = (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.currentTarget;
@@ -48,9 +51,10 @@ function ActivityForm({ match }: RouteComponentProps<DetailParams>) {
         ...activity,
         id: uuid(),
       };
-      createActivity(newActivity);
+      createActivity(newActivity).then(() => history.push(`/activities/${newActivity.id}`));
+
     } else {
-      editActivity(activity);
+      editActivity(activity).then(() => history.push(`/activities/${activity.id}`));
     }
   };
 
@@ -75,7 +79,7 @@ function ActivityForm({ match }: RouteComponentProps<DetailParams>) {
         <Form.Input onChange={handleInputChange} name='city' placeholder='City' value={activity.city} />
         <Form.Input onChange={handleInputChange} name='venue' placeholder='Venue' value={activity.venue} />
         <Button floated='right' positive type='submit' content='Submit' loading={submitting} />
-        <Button onClick={cancelFormOpen} floated='right' type='button' content='Cancel' />
+        <Button onClick={() => history.push('/activities')} floated='right' type='button' content='Cancel' />
       </Form>
     </Segment>
   );
