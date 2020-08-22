@@ -8,19 +8,29 @@ import ActivityDetailedHeader from "./ActivityDetailedHeader";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
 import ActivityDetailedChat from "./ActivityDetailedChat";
 import ActivityDetailedSideBar from "./ActivityDetailedSideBar";
+import NotFound from "../../../app/layout/NotFound";
 
 interface DetailParams {
   id:string
 }
-function ActivityDetails({match} :RouteComponentProps<DetailParams>) {
+function ActivityDetails({match, history} :RouteComponentProps<DetailParams>) {
   const activityStore = useContext(ActivityStore);
   const { activity, loadActivity, loadingInitial } = activityStore;
 
   useEffect(() => {
     loadActivity(match.params.id);
-  }, [loadActivity, match.params.id])
+  }, [loadActivity, match.params.id, history])
 
-  if(loadingInitial || !activity) return <LoadingComponent content="Loading activity..."/>
+  if(loadingInitial){
+    return <LoadingComponent content="Loading activity..."/>
+  } 
+
+  if(!activity)
+  {
+    return (<h2>Activity not found</h2>);
+  }
+  
+  
 
   return (
     <Grid>
