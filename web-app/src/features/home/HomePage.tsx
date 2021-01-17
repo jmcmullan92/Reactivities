@@ -1,6 +1,7 @@
-import React from "react";
-import { Container, Segment, Header, Button, Image } from "semantic-ui-react";
+import { Button, Container, Header, Image, Segment } from "semantic-ui-react";
+
 import { Link } from "react-router-dom";
+import React from "react";
 
 function HomePage() {
   return (
@@ -11,8 +12,8 @@ function HomePage() {
           Reactivities
         </Header>
         <Header as='h2' inverted content='Welcome to Reactivities' />
-        <Button as={Link} to='/activities' size='huge' inverted>
-          Take me to the activities!
+        <Button as={Link} to='/login' size='huge' inverted>
+          Login
         </Button>
       </Container>
     </Segment>
