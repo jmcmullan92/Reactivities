@@ -3,6 +3,7 @@ import { action, computed, observable, runInAction } from "mobx";
 
 import { RootStore } from "./rootStore";
 import agent from "../api/agent";
+import { history } from "../..";
 
 export default class UserStore {
   rootStore: RootStore;
@@ -24,8 +25,9 @@ export default class UserStore {
           this.user = user;
       })
       console.log(user);
+      history.push('/activities');
     } catch (error) {
-        console.log(error)
+        throw error;
     }
   };
 }
