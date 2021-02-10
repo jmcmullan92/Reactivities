@@ -24,10 +24,41 @@ export default class UserStore {
       runInAction(() => {
           this.user = user;
       })
-      console.log(user);
+      this.rootStore.commonStore.setStoken(user.token);
+      this.rootStore.modalStore.closeModal();
       history.push('/activities');
     } catch (error) {
         throw error;
     }
+  };
+
+  @action register = async(values: IUserFormValues) => {
+    try{
+      const user = await agent.User.register(values);
+      this.rootStore.commonStore.setStoken(user.token);
+      this.rootStore.modalStore.closeModal();
+      history.push('/activities')
+    }
+    catch (error) {
+      throw error;
+    }
+  }
+
+  @action getUser = async() => {
+    try{
+      const user = await agent.User.current();
+      runInAction(() => {
+        this.user = user;
+      })
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  @action logout = () => {
+    this.rootStore.commonStore.setStoken(null);
+    this.user = null;
+    history.push('/');
   };
 }

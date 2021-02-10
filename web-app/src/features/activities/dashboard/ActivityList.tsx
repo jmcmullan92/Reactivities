@@ -5,6 +5,8 @@ import ActivityListItem from "./ActivityListItem";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 import { observer } from "mobx-react-lite";
 
+import {format} from 'date-fns';
+
 function ActivityList() {
   const rootStore = useContext(RootStoreContext);
   const { activitiesByDate } = rootStore.activityStore;
@@ -14,7 +16,7 @@ function ActivityList() {
       {activitiesByDate.map(([group, activities]) => (
         <Fragment key={group}>
           <Label size='large' color='blue'>
-            {group}
+            {format(Date.parse(group), 'eeee do MMMM')}
           </Label>
           <Item.Group divided>
             {activities.map((activity) => (
